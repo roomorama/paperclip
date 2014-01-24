@@ -4,24 +4,14 @@ module Paperclip
     REGEXP = /\Adata:([-\w]+\/[-\w\+]+);base64,(.*)/m
 
     def initialize(target_uri)
-      @target_uri = target_uri
-      cache_current_values
-      @tempfile = copy_to_tempfile
+      super(extract_target(target_uri))
     end
 
     private
 
-    def cache_current_values
-      data_uri_parts ||= @target_uri.match(REGEXP) || []
-      @content_type = ContentTypeDetector.new(@tempfile.path)
-      self.original_filename = "data.#{extension_for(@content_type)}"
-      @target = StringIO.new(Base64.decode64(data_uri_parts[2] || ''))
-      @size = @target.size
-    end
-
-    def extension_for(content_type)
-      type = MIME::Types[content_type].first
-      type && type.extensions.first
+    def extract_target(uri)
+      data_uri_parts = uri.match(REGEXP) || []
+      StringIO.new(Base64.decode64(data_uri_parts[2] || ''))
     end
 
   end

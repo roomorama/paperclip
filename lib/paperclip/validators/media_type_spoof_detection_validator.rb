@@ -4,7 +4,8 @@ module Paperclip
   module Validators
     class MediaTypeSpoofDetectionValidator < ActiveModel::EachValidator
       def validate_each(record, attribute, value)
-        if Paperclip::MediaTypeSpoofDetector.using(value, value.original_filename).spoofed?
+        adapter = Paperclip.io_adapters.for(value)
+        if Paperclip::MediaTypeSpoofDetector.using(adapter, value.original_filename).spoofed?
           record.errors.add(attribute, :spoofed_media_type)
         end
       end
