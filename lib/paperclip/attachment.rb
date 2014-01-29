@@ -437,7 +437,7 @@ module Paperclip
         original_file = @queued_for_write[:original]
         @queued_for_write[name] = style.processors.inject(@queued_for_write[:original]) do |file, processor|
           new_file = Paperclip.processor(processor).make(file, style.processor_options, self)
-          file.close unless file == original_file
+          #file.close unless file == original_file
           new_file
         end
         unadapted_file = @queued_for_write[name]
