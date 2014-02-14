@@ -339,6 +339,7 @@ module Paperclip
             create_bucket
             retry
           ensure
+            AWS.config.http_handler.pool.empty!
             file.rewind
           end
         end
